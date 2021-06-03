@@ -14,4 +14,4 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /App
 COPY --from=build-env /src/out .
-ENTRYPOINT dotnet BrowserlessBot.dll $TELEGRAM_BOT_TOKEN $BROWSERLESS_ENDPOINT $BROWSERLESS_TOKEN
+ENTRYPOINT dotnet BrowserlessBot.dll $TELEGRAM_BOT_TOKEN $BROWSERLESS_ENDPOINT $BROWSERLESS_TOKEN $ADMIN_USERNAME
