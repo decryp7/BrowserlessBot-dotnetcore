@@ -18,12 +18,12 @@ namespace BrowserlessBot
             if (args.Length < 4)
             {
                 Console.WriteLine(
-                    "Missing parameters! Mandatory parameters are TELEGRAM_BOT_TOKEN BROWSERLESS_ENDPOINT BROWSERLESS_TOKEN ADMIN_USERNAME in this order.");
+                    "Missing parameters! Mandatory parameters are TELEGRAM_BOT_TOKEN BROWSERLESS_ENDPOINT BROWSERLESS_TOKEN ADMIN_CHATID in this order.");
                 Environment.Exit(0);
             }
 
             Settings.BrowserlessEndpoint = $"wss://{args[1]}?token={args[2]}";
-            Settings.AdminUsername = args[3];
+            Settings.AdminChatId = long.Parse(args[3]);
 
             botClient = new TelegramBotClient(args[0].Trim());
             notifier = new AdminNotifier(botClient);
@@ -54,7 +54,7 @@ namespace BrowserlessBot
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
 
-            notifier.Notify("Browserless bot is onffline!");
+            notifier.Notify("Browserless bot is offline!");
             botClient.StopReceiving();
         }
 

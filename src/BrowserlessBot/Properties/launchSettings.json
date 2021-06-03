@@ -2,7 +2,7 @@
   "profiles": {
     "BrowserlessBot": {
       "commandName": "Project",
-      "commandLineArgs": "%BrowserlessBotToken% %BrowserlessEndpoint% %BrowserlessToken%"
+      "commandLineArgs": "%BrowserlessBotToken% %BrowserlessEndpoint% %BrowserlessToken% %BrowserlessBotAdminChatId%"
     }
   }
 }

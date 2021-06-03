@@ -20,7 +20,7 @@ namespace BrowserlessBot
         {
             Guard.Ensure(message, nameof(message)).IsNotNullOrEmpty();
 
-            await botClient.SendTextMessageAsync(new ChatId(Settings.AdminUsername), message);
+            await botClient.SendTextMessageAsync(new ChatId(Settings.AdminChatId), message);
         }
     }
 }
