@@ -9,16 +9,16 @@ using Telegram.Bot.Types.InputFiles;
 
 namespace BrowserlessBot
 {
-    public class HtmlCommandHandler : IBotCommandHandler
+    public class ContentCommandHandler : IBotCommandHandler
     {
         public ITelegramBotClient BotClient { get; set; }
 
-        public string Command { get; } = "/html";
+        public string Command { get; } = "/content";
 
         public string CommandDescription { get; } =
-            "/html {url}" +
+            "/content {url}" +
             Environment.NewLine +
-            "Get the html of {url}";
+            "Get the content of {url}";
 
         public async Task Handle(Chat chat, string commandArgs)
         {
@@ -37,7 +37,7 @@ namespace BrowserlessBot
                 WaitUntil = new[] { WaitUntilNavigation.Networkidle0 },
             };
 
-            Message message = await BotClient.SendTextMessageAsync(chat, $"{chat.FirstName}, please hold while I get the html for {commandArgs}.");
+            Message message = await BotClient.SendTextMessageAsync(chat, $"{chat.FirstName}, please hold while I get the content for {commandArgs}.");
 
             try
             {
@@ -67,7 +67,7 @@ namespace BrowserlessBot
             catch (Exception ex)
             {
                 await BotClient.EditMessageTextAsync(chat, message.MessageId,
-                    $"Sorry {chat.FirstName}, I am unable to get html for {commandArgs}. Error: {ex.Message}");
+                    $"Sorry {chat.FirstName}, I am unable to get content for {commandArgs}. Error: {ex.Message}");
             }
             finally
             {

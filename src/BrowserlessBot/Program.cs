@@ -27,7 +27,7 @@ namespace BrowserlessBot
                 new StartCommandHandler(),
                 new PDFCommandHandler(),
                 new ScreenshotCommandHandler(),
-                new HtmlCommandHandler());
+                new ContentCommandHandler());
 
             try
             {
