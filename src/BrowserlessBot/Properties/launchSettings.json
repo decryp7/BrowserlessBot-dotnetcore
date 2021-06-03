@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BrowserlessBot": {
+      "commandName": "Project",
+      "commandLineArgs": "%BrowserlessBotToken% %BrowserlessEndpoint% %BrowserlessToken%"
+    }
+  }
+}
