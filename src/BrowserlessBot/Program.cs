@@ -55,7 +55,8 @@ namespace BrowserlessBot
         {
             try
             {
-                if (e.Message.Entities.Length > 0 &&
+                if (e.Message.Entities != null &&
+                    e.Message.Entities.Length > 0 &&
                     e.Message.Entities[0].Type == MessageEntityType.BotCommand)
                 {
                     string command = e.Message.Text.Substring(e.Message.Entities[0].Offset);
