@@ -65,14 +65,14 @@ namespace BrowserlessBot
                     await BotClient.SendDocumentAsync(chat,
                             new InputOnlineFile(stream, $"{commandArgs}.txt"));
                     await BotClient.DeleteMessageAsync(chat, message.MessageId);
-                    await Notifier.Notify($"I have gotten content from {commandArgs} for {chat.FirstName}.");
+                    await Notifier.Notify(chat, $"I have gotten content from {commandArgs} for {chat.FirstName}.");
                 }
             }
             catch (Exception ex)
             {
                 await BotClient.EditMessageTextAsync(chat, message.MessageId,
                     $"Sorry {chat.FirstName}, I am unable to get content for {commandArgs}. Error: {ex.Message}");
-                await Notifier.Notify($"I am unable to get content for {chat.FirstName}. CommandArgs: {commandArgs} Error: {ex.Message}");
+                await Notifier.Notify(chat, $"I am unable to get content for {chat.FirstName}. CommandArgs: {commandArgs} Error: {ex.Message}");
             }
         }
     }

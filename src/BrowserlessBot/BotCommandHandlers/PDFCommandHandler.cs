@@ -65,7 +65,7 @@ namespace BrowserlessBot
                     {
                         await BotClient.SendDocumentAsync(chat, new InputOnlineFile(pdfStream, $"{commandArgs}.pdf"));
                         await BotClient.DeleteMessageAsync(chat, message.MessageId);
-                        await Notifier.Notify($"I have generated PDF from {commandArgs} for {chat.FirstName}.");
+                        await Notifier.Notify(chat, $"I have generated PDF from {commandArgs} for {chat.FirstName}.");
                     }
                 }
             }
@@ -73,7 +73,7 @@ namespace BrowserlessBot
             {
                 await BotClient.EditMessageTextAsync(chat, message.MessageId,
                     $"Sorry {chat.FirstName}, I am unable to generate PDF for {commandArgs}. Error: {ex.Message}");
-                await Notifier.Notify($"I am unable to generate PDF for {chat.FirstName}. CommandArgs: {commandArgs} Error: {ex.Message}");
+                await Notifier.Notify(chat, $"I am unable to generate PDF for {chat.FirstName}. CommandArgs: {commandArgs} Error: {ex.Message}");
             }
         }
     }

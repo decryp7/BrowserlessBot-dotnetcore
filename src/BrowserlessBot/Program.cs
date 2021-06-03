@@ -37,7 +37,7 @@ namespace BrowserlessBot
             try
             {
                 var me = botClient.GetMeAsync().Result;
-                notifier.Notify("Browserless bot is online!");
+                notifier.Notify(null, "Browserless bot is online!");
                 Console.WriteLine(
                     $"Hello, World! I am user {me.Id} and my name is {me.FirstName}."
                 );
@@ -54,7 +54,7 @@ namespace BrowserlessBot
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
 
-            notifier.Notify("Browserless bot is offline!");
+            notifier.Notify(null, "Browserless bot is offline!");
             botClient.StopReceiving();
         }
 
@@ -76,7 +76,7 @@ namespace BrowserlessBot
                 if (e.Message.Text != null)
                 {
                     string msg = $"Received a text message from {e.Message.From.FirstName}. Message: {e.Message.Text}";
-                    await notifier.Notify(msg);
+                    await notifier.Notify(e.Message.Chat, msg);
                     Console.WriteLine(msg);
                 }
             }
