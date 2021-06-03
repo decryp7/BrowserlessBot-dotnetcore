@@ -61,6 +61,8 @@ namespace BrowserlessBot
                         return;
                     }
 
+                    await page.EmulateMediaTypeAsync(MediaType.Screen);
+
                     await using (Stream pdfStream = await page.PdfStreamAsync(pdfOptions))
                     {
                         await BotClient.SendDocumentAsync(chat, new InputOnlineFile(pdfStream, $"{commandArgs}.pdf"));
