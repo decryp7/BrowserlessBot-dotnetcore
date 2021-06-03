@@ -20,6 +20,7 @@ steps:
   - docker login docker.decryptology.net -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker build -t docker.decryptology.net/decryptology/browserlessbot:latest .
   - docker push docker.decryptology.net/decryptology/browserlessbot:latest
+  - docker run --rm -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower:latest --run-once --cleanup --rolling-restart browserlessbot
 
 volumes:
   - name: dockersock
