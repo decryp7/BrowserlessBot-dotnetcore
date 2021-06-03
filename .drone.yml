@@ -13,6 +13,9 @@ steps:
       from_secret: repo_username
     DOCKER_PASSWORD:
       from_secret: repo_password
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
   commands:
   - docker login docker.decryptology.net -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - docker build -t docker.decryptology.net/decryptology/browserlessbot:latest .
