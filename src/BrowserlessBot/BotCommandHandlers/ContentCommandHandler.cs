@@ -12,6 +12,7 @@ namespace BrowserlessBot
     public class ContentCommandHandler : IBotCommandHandler
     {
         public ITelegramBotClient BotClient { get; set; }
+        public INotifier Notifier { get; set; }
 
         public string Command { get; } = "/content";
 
@@ -25,6 +26,7 @@ namespace BrowserlessBot
             if (string.IsNullOrEmpty(commandArgs.Trim()))
             {
                 await BotClient.SendTextMessageAsync(chat, $"Missing url parameter. Usage: {CommandDescription}");
+                return;
             }
 
             ConnectOptions connectOptions = new ConnectOptions()
@@ -63,12 +65,14 @@ namespace BrowserlessBot
                     await BotClient.SendDocumentAsync(chat,
                             new InputOnlineFile(stream, $"{commandArgs}.txt"));
                     await BotClient.DeleteMessageAsync(chat, message.MessageId);
+                    await Notifier.Notify($"I have gotten content from {commandArgs} for {chat.FirstName}.");
                 }
             }
             catch (Exception ex)
             {
                 await BotClient.EditMessageTextAsync(chat, message.MessageId,
                     $"Sorry {chat.FirstName}, I am unable to get content for {commandArgs}. Error: {ex.Message}");
+                await Notifier.Notify($"I am unable to get content for {chat.FirstName}. CommandArgs: {commandArgs} Error: {ex.Message}");
             }
         }
     }

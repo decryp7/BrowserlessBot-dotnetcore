@@ -12,7 +12,8 @@ namespace BrowserlessBot
     public class ScreenshotCommandHandler : IBotCommandHandler
     {
         public ITelegramBotClient BotClient { get; set; }
-        
+        public INotifier Notifier { get; set; }
+
         public string Command { get; } = "/screenshot";
 
         public string CommandDescription { get; } =
@@ -25,6 +26,7 @@ namespace BrowserlessBot
             if (string.IsNullOrEmpty(commandArgs.Trim()))
             {
                 await BotClient.SendTextMessageAsync(chat, $"Missing url parameter. Usage: {CommandDescription}");
+                return;
             }
 
             ConnectOptions connectOptions = new ConnectOptions()
@@ -64,6 +66,7 @@ namespace BrowserlessBot
                         await BotClient.SendDocumentAsync(chat,
                             new InputOnlineFile(screenshotStream, $"{commandArgs}.png"));
                         await BotClient.DeleteMessageAsync(chat, message.MessageId);
+                        await Notifier.Notify($"I have generated screenshot from {commandArgs} for {chat.FirstName}.");
                     }
                 }
             }
@@ -71,6 +74,7 @@ namespace BrowserlessBot
             {
                 await BotClient.EditMessageTextAsync(chat, message.MessageId,
                     $"Sorry {chat.FirstName}, I am unable to generate screenshot for {commandArgs}. Error: {ex.Message}");
+                await Notifier.Notify($"I am unable to generate screenshot for {chat.FirstName}. CommandArgs: {commandArgs} Error: {ex.Message}");
             }
         }
     }

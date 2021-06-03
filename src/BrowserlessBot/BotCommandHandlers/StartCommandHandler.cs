@@ -7,6 +7,7 @@ namespace BrowserlessBot
     public class StartCommandHandler : IBotCommandHandler
     {
         public ITelegramBotClient BotClient { get; set; }
+        public INotifier Notifier { get; set; }
 
         public string Command { get; } = "/start";
 
@@ -16,6 +17,7 @@ namespace BrowserlessBot
         {
             User bot = await BotClient.GetMeAsync();
             await BotClient.SendTextMessageAsync(chat, $"Hello {chat.FirstName}, {bot.FirstName} at your service.");
+            await Notifier.Notify($"I have received chat request from {chat.FirstName}.");
         }
     }
 }

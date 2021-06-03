@@ -11,19 +11,24 @@ namespace BrowserlessBot
     {
         private static ITelegramBotClient botClient;
         private static IBotCommandHandlerService botCommandHandlerService;
+        private static INotifier notifier;
 
         static void Main(string[] args)
         {
-            if (args.Length < 3)
+            if (args.Length < 4)
             {
                 Console.WriteLine(
-                    "Missing parameters! Mandatory parameters are TELEGRAM_BOT_TOKEN BROWSERLESS_ENDPOINT BROWSERLESS_TOKEN in this order.");
+                    "Missing parameters! Mandatory parameters are TELEGRAM_BOT_TOKEN BROWSERLESS_ENDPOINT BROWSERLESS_TOKEN ADMIN_USERNAME in this order.");
                 Environment.Exit(0);
             }
 
             Settings.BrowserlessEndpoint = $"wss://{args[1]}?token={args[2]}";
+            Settings.AdminUsername = args[3];
+
             botClient = new TelegramBotClient(args[0].Trim());
+            notifier = new AdminNotifier(botClient);
             botCommandHandlerService = new BotCommandHandlerService(botClient,
+                notifier,
                 new StartCommandHandler(),
                 new PDFCommandHandler(),
                 new ScreenshotCommandHandler(),
@@ -32,6 +37,7 @@ namespace BrowserlessBot
             try
             {
                 var me = botClient.GetMeAsync().Result;
+                notifier.Notify("Browserless bot is online!");
                 Console.WriteLine(
                     $"Hello, World! I am user {me.Id} and my name is {me.FirstName}."
                 );
@@ -48,6 +54,7 @@ namespace BrowserlessBot
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
 
+            notifier.Notify("Browserless bot is onffline!");
             botClient.StopReceiving();
         }
 
@@ -68,8 +75,9 @@ namespace BrowserlessBot
 
                 if (e.Message.Text != null)
                 {
-                    Console.WriteLine(
-                        $"Received a text message from {e.Message.From.FirstName}. Message: {e.Message.Text}");
+                    string msg = $"Received a text message from {e.Message.From.FirstName}. Message: {e.Message.Text}";
+                    await notifier.Notify(msg);
+                    Console.WriteLine(msg);
                 }
             }
             catch (Exception ex)

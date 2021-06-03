@@ -16,16 +16,22 @@ namespace BrowserlessBot
             new Dictionary<string, IBotCommandHandler>(StringComparer.OrdinalIgnoreCase);
 
         private readonly ITelegramBotClient botClient;
+        private readonly INotifier notifier;
 
-        public BotCommandHandlerService(ITelegramBotClient botClient, params IBotCommandHandler[] handlers)
+        public BotCommandHandlerService(ITelegramBotClient botClient, 
+            INotifier notifier, 
+            params IBotCommandHandler[] handlers)
         {
             Guard.Ensure(botClient, nameof(botClient)).IsNotNull();
+            Guard.Ensure(notifier, nameof(notifier)).IsNotNull();
 
             this.botClient = botClient;
+            this.notifier = notifier;
 
             foreach (IBotCommandHandler botCommandHandler in handlers)
             {
                 botCommandHandler.BotClient = botClient;
+                botCommandHandler.Notifier = notifier;
                 botCommandHandlers[botCommandHandler.Command] = botCommandHandler;
             }
         }
@@ -46,6 +52,7 @@ namespace BrowserlessBot
 
             if (!botCommandHandlers.TryGetValue(cmd, out IBotCommandHandler botCommandHandler))
             {
+                await notifier.Notify($"I am unable to handle {command} from {chat.FirstName}");
                 await botClient.SendTextMessageAsync(chat, $"Sorry {chat.FirstName}, I am unable to handle {command}.");
                 await botClient.SendTextMessageAsync(chat, $"{this.GetAvailableCommands()}");
                 return;

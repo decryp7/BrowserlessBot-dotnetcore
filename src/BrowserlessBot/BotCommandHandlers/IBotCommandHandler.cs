@@ -8,6 +8,8 @@ namespace BrowserlessBot
     {
         ITelegramBotClient BotClient { set; }
 
+        INotifier Notifier { set; }
+
         string Command { get; }
 
         string CommandDescription { get; }
