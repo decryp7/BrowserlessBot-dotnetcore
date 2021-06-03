@@ -46,7 +46,7 @@ namespace BrowserlessBot
 
             if (!botCommandHandlers.TryGetValue(cmd, out IBotCommandHandler botCommandHandler))
             {
-                await botClient.SendTextMessageAsync(chat, $"Sorry, I am unable to handle {command}.");
+                await botClient.SendTextMessageAsync(chat, $"Sorry {chat.FirstName}, I am unable to handle {command}.");
                 await botClient.SendTextMessageAsync(chat, $"{this.GetAvailableCommands()}");
                 return;
             }

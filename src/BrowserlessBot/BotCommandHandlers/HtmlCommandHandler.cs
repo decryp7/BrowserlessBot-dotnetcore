@@ -37,7 +37,7 @@ namespace BrowserlessBot
                 WaitUntil = new[] { WaitUntilNavigation.Networkidle0 },
             };
 
-            Message message = await BotClient.SendTextMessageAsync(chat, $"Please hold while I get the html for {commandArgs}.");
+            Message message = await BotClient.SendTextMessageAsync(chat, $"{chat.FirstName}, please hold while I get the html for {commandArgs}.");
 
             try
             {
@@ -49,7 +49,7 @@ namespace BrowserlessBot
                     if (!response.Ok)
                     {
                         await BotClient.EditMessageTextAsync(chat, message.MessageId,
-                            "Unable to navigate to {commandArgs}. {response.ToString()}");
+                            $"Sorry {chat.FirstName}, I am unable to navigate to {commandArgs}. {response.ToString()}");
                         return;
                     }
 
@@ -67,7 +67,7 @@ namespace BrowserlessBot
             catch (Exception ex)
             {
                 await BotClient.EditMessageTextAsync(chat, message.MessageId,
-                    $"Unable to get html for {commandArgs}. Error: {ex.Message}");
+                    $"Sorry {chat.FirstName}, I am unable to get html for {commandArgs}. Error: {ex.Message}");
             }
             finally
             {
