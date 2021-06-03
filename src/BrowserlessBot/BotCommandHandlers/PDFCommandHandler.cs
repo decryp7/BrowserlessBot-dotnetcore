@@ -62,6 +62,7 @@ namespace BrowserlessBot
                     await using (Stream pdfStream = await page.PdfStreamAsync(pdfOptions))
                     {
                         await BotClient.SendDocumentAsync(chat, new InputOnlineFile(pdfStream, $"{commandArgs}.pdf"));
+                        await BotClient.DeleteMessageAsync(chat, message.MessageId);
                     }
                 }
             }
@@ -69,10 +70,6 @@ namespace BrowserlessBot
             {
                 await BotClient.EditMessageTextAsync(chat, message.MessageId,
                     $"Sorry {chat.FirstName}, I am unable to generate PDF for {commandArgs}. Error: {ex.Message}");
-            }
-            finally
-            {
-                await BotClient.DeleteMessageAsync(chat, message.MessageId);
             }
         }
     }

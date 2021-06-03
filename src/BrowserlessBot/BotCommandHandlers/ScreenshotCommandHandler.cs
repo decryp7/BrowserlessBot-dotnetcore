@@ -63,6 +63,7 @@ namespace BrowserlessBot
                     {
                         await BotClient.SendDocumentAsync(chat,
                             new InputOnlineFile(screenshotStream, $"{commandArgs}.png"));
+                        await BotClient.DeleteMessageAsync(chat, message.MessageId);
                     }
                 }
             }
@@ -70,10 +71,6 @@ namespace BrowserlessBot
             {
                 await BotClient.EditMessageTextAsync(chat, message.MessageId,
                     $"Sorry {chat.FirstName}, I am unable to generate screenshot for {commandArgs}. Error: {ex.Message}");
-            }
-            finally
-            {
-                await BotClient.DeleteMessageAsync(chat, message.MessageId);
             }
         }
     }
