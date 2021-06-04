@@ -42,7 +42,7 @@ namespace BrowserlessBot
 
             NavigationOptions navigationOptions = new NavigationOptions()
             {
-                WaitUntil = new[] { WaitUntilNavigation.Networkidle0 },
+                WaitUntil = new[] { WaitUntilNavigation.Networkidle2 },
             };
 
             Message message = await BotClient.SendTextMessageAsync(chat, $"{chat.FirstName}, please hold while I generate the screenshot for {commandArgs}.");
@@ -60,6 +60,8 @@ namespace BrowserlessBot
                             $"Sorry { chat.FirstName}, I am unable to navigate to {commandArgs}. {response.ToString()}");
                         return;
                     }
+
+                    await page.WaitForNavigationAsync(navigationOptions);
 
                     await using (Stream screenshotStream = await page.ScreenshotStreamAsync(screenshotOptions))
                     {

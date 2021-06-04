@@ -42,7 +42,7 @@ namespace BrowserlessBot
 
             NavigationOptions navigationOptions = new NavigationOptions()
             {
-                WaitUntil = new[] { WaitUntilNavigation.Networkidle0 },
+                WaitUntil = new[] { WaitUntilNavigation.Networkidle2 },
             };
 
             Message message = await BotClient.SendTextMessageAsync(chat, $"{chat.FirstName}, please hold while I generate the PDF for {commandArgs}.");
@@ -61,6 +61,7 @@ namespace BrowserlessBot
                         return;
                     }
 
+                    await page.WaitForNavigationAsync(navigationOptions);
                     await page.EmulateMediaTypeAsync(MediaType.Screen);
 
                     await using (Stream pdfStream = await page.PdfStreamAsync(pdfOptions))

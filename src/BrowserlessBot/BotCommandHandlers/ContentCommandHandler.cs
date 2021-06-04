@@ -36,7 +36,7 @@ namespace BrowserlessBot
 
             NavigationOptions navigationOptions = new NavigationOptions()
             {
-                WaitUntil = new[] { WaitUntilNavigation.Networkidle0 },
+                WaitUntil = new[] { WaitUntilNavigation.Networkidle2 },
             };
 
             Message message = await BotClient.SendTextMessageAsync(chat, $"{chat.FirstName}, please hold while I get the content for {commandArgs}.");
@@ -55,6 +55,7 @@ namespace BrowserlessBot
                         return;
                     }
 
+                    await page.WaitForNavigationAsync(navigationOptions);
                     string html = await page.GetContentAsync();
 
                     // convert string to stream
