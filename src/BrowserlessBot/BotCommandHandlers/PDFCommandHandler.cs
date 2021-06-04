@@ -61,7 +61,6 @@ namespace BrowserlessBot
                         return;
                     }
 
-                    await page.WaitForNavigationAsync(navigationOptions);
                     await page.EmulateMediaTypeAsync(MediaType.Screen);
 
                     await using (Stream pdfStream = await page.PdfStreamAsync(pdfOptions))

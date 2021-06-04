@@ -55,7 +55,6 @@ namespace BrowserlessBot
                         return;
                     }
 
-                    await page.WaitForNavigationAsync(navigationOptions);
                     string html = await page.GetContentAsync();
 
                     // convert string to stream

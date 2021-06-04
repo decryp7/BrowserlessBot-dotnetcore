@@ -61,8 +61,6 @@ namespace BrowserlessBot
                         return;
                     }
 
-                    await page.WaitForNavigationAsync(navigationOptions);
-
                     await using (Stream screenshotStream = await page.ScreenshotStreamAsync(screenshotOptions))
                     {
                         await BotClient.SendDocumentAsync(chat,
