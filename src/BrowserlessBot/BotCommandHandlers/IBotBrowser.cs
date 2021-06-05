@@ -6,6 +6,6 @@ namespace BrowserlessBot
 {
     public interface IBotBrowser : IDisposable
     {
-        Task<Response> Goto(string url, Action<Page> pageAction);
+        Task<Response> Goto(string url, Func<Page, Task> pageAction);
     }
 }

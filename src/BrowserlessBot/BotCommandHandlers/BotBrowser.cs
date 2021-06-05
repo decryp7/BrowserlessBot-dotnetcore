@@ -30,7 +30,7 @@ namespace BrowserlessBot
             browser?.Dispose();
         }
 
-        public async Task<Response> Goto(string url, Action<Page> pageAction)
+        public async Task<Response> Goto(string url, Func<Page, Task> pageAction)
         {
             browser = await Puppeteer.ConnectAsync(connectOptions);
             page = await browser.NewPageAsync();
@@ -42,10 +42,7 @@ namespace BrowserlessBot
                 return response;
             }
 
-            await Task.Run(() =>
-            {
-                pageAction(page);
-            });
+            await pageAction(page);
 
             return response;
         }
