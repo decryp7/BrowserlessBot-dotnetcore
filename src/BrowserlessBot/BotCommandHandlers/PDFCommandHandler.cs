@@ -32,6 +32,7 @@ namespace BrowserlessBot
             PdfOptions pdfOptions = new PdfOptions()
             {
                 Format = PaperFormat.A4,
+                Landscape = true,
                 PrintBackground = true
             };
 
