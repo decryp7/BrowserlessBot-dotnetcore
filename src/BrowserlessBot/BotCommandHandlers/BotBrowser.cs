@@ -42,7 +42,10 @@ namespace BrowserlessBot
                 return response;
             }
 
-            await Task.Run(() => pageAction(page));
+            await Task.Run(() =>
+            {
+                pageAction(page);
+            });
 
             return response;
         }
