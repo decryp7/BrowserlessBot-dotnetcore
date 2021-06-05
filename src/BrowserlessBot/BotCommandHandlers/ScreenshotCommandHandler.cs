@@ -29,44 +29,34 @@ namespace BrowserlessBot
                 return;
             }
 
-            ConnectOptions connectOptions = new ConnectOptions()
-            {
-                BrowserWSEndpoint = Settings.BrowserlessEndpoint
-            };
-
             ScreenshotOptions screenshotOptions = new ScreenshotOptions()
             {
                 FullPage = true,
                 Type = ScreenshotType.Png
             };
 
-            NavigationOptions navigationOptions = new NavigationOptions()
-            {
-                WaitUntil = new[] { WaitUntilNavigation.Networkidle2 },
-            };
-
             Message message = await BotClient.SendTextMessageAsync(chat, $"{chat.FirstName}, please hold while I generate the screenshot for {commandArgs}.");
 
             try
             {
-                await using (Browser browser = await Puppeteer.ConnectAsync(connectOptions))
-                await using (Page page = await browser.NewPageAsync())
+                using (IBotBrowser botBrowser = new BotBrowser())
                 {
-                    Response response = page.GoToAsync(commandArgs, navigationOptions).Result;
+                    Response response = await botBrowser.Goto(commandArgs, async page =>
+                    {
+                        await using (Stream screenshotStream = await page.ScreenshotStreamAsync(screenshotOptions))
+                        {
+                            await BotClient.SendDocumentAsync(chat,
+                                new InputOnlineFile(screenshotStream, $"{commandArgs}.png"));
+                            await BotClient.DeleteMessageAsync(chat, message.MessageId);
+                            await Notifier.Notify(chat, $"I have generated screenshot from {commandArgs} for {chat.FirstName}.");
+                        }
+                    });
 
                     if (!response.Ok)
                     {
                         await BotClient.EditMessageTextAsync(chat, message.MessageId,
                             $"Sorry { chat.FirstName}, I am unable to navigate to {commandArgs}. {response.ToString()}");
                         return;
-                    }
-
-                    await using (Stream screenshotStream = await page.ScreenshotStreamAsync(screenshotOptions))
-                    {
-                        await BotClient.SendDocumentAsync(chat,
-                            new InputOnlineFile(screenshotStream, $"{commandArgs}.png"));
-                        await BotClient.DeleteMessageAsync(chat, message.MessageId);
-                        await Notifier.Notify(chat, $"I have generated screenshot from {commandArgs} for {chat.FirstName}.");
                     }
                 }
             }

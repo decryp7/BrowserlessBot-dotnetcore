@@ -29,24 +29,26 @@ namespace BrowserlessBot
                 return;
             }
 
-            ConnectOptions connectOptions = new ConnectOptions()
-            {
-                BrowserWSEndpoint = Settings.BrowserlessEndpoint
-            };
-
-            NavigationOptions navigationOptions = new NavigationOptions()
-            {
-                WaitUntil = new[] { WaitUntilNavigation.Networkidle2 },
-            };
-
             Message message = await BotClient.SendTextMessageAsync(chat, $"{chat.FirstName}, please hold while I get the content for {commandArgs}.");
 
             try
             {
-                await using (Browser browser = await Puppeteer.ConnectAsync(connectOptions))
-                await using (Page page = await browser.NewPageAsync())
+                using (IBotBrowser botBrowser = new BotBrowser())
                 {
-                    Response response = page.GoToAsync(commandArgs, navigationOptions).Result;
+                    Response response = await botBrowser.Goto(commandArgs, async page =>
+                    {
+                        string html = await page.GetContentAsync();
+
+                        // convert string to stream
+                        byte[] byteArray = Encoding.UTF8.GetBytes(html);
+                        //byte[] byteArray = Encoding.ASCII.GetBytes(contents);
+                        MemoryStream stream = new MemoryStream(byteArray);
+
+                        await BotClient.SendDocumentAsync(chat,
+                            new InputOnlineFile(stream, $"{commandArgs}.txt"));
+                        await BotClient.DeleteMessageAsync(chat, message.MessageId);
+                        await Notifier.Notify(chat, $"I have gotten content from {commandArgs} for {chat.FirstName}.");
+                    });
 
                     if (!response.Ok)
                     {
@@ -54,18 +56,6 @@ namespace BrowserlessBot
                             $"Sorry {chat.FirstName}, I am unable to navigate to {commandArgs}. {response.ToString()}");
                         return;
                     }
-
-                    string html = await page.GetContentAsync();
-
-                    // convert string to stream
-                    byte[] byteArray = Encoding.UTF8.GetBytes(html);
-                    //byte[] byteArray = Encoding.ASCII.GetBytes(contents);
-                    MemoryStream stream = new MemoryStream(byteArray);
-
-                    await BotClient.SendDocumentAsync(chat,
-                            new InputOnlineFile(stream, $"{commandArgs}.txt"));
-                    await BotClient.DeleteMessageAsync(chat, message.MessageId);
-                    await Notifier.Notify(chat, $"I have gotten content from {commandArgs} for {chat.FirstName}.");
                 }
             }
             catch (Exception ex)
