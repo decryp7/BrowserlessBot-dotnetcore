@@ -16,7 +16,7 @@ namespace BrowserlessBot
         public async Task Handle(Chat chat, string commandArgs)
         {
             User bot = await BotClient.GetMeAsync();
-            await BotClient.SendTextMessageAsync(chat, $"Hello {chat.FirstName}, {bot.LastName} at your service.");
+            await BotClient.SendTextMessageAsync(chat, $"Hello {chat.FirstName}, {bot.FirstName} at your service.");
             await Notifier.Notify(chat, $"I have received chat request from {chat.FirstName}.");
         }
     }
