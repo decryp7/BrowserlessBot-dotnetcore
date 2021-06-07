@@ -29,6 +29,7 @@ namespace BrowserlessBot
             notifier = new AdminNotifier(botClient);
             botCommandHandlerService = new BotCommandHandlerService(botClient,
                 notifier,
+                new AboutCommandHandler(),
                 new StartCommandHandler(),
                 new PDFCommandHandler(),
                 new ScreenshotCommandHandler(),
