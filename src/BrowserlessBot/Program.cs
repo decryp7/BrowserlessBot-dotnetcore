@@ -53,7 +53,7 @@ namespace BrowserlessBot
             botClient.StartReceiving();
 
             Console.WriteLine("Press any key to exit");
-            Console.Read();
+            Console.ReadKey();
 
             notifier.Notify(null, "Browserless bot is offline!");
             botClient.StopReceiving();
