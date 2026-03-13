@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <PackageReference Include="GuardLibrary" Version="1.0.0" />
-    <PackageReference Include="PuppeteerSharp" Version="21.1.1" />
+    <PackageReference Include="PuppeteerSharp" Version="24.39.0" />
     <PackageReference Include="Telegram.Bot" Version="22.9.5.3" />
   </ItemGroup>
 
